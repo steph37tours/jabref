@@ -62,6 +62,7 @@ import org.jabref.gui.undo.UndoableFieldChange;
 import org.jabref.gui.undo.UndoableKeyChange;
 import org.jabref.gui.undo.UndoableRemoveEntry;
 import org.jabref.gui.util.DefaultTaskExecutor;
+import org.jabref.gui.util.KeyStrokeToString;
 import org.jabref.gui.util.component.CheckBoxMessage;
 import org.jabref.gui.util.component.VerticalLabelUI;
 import org.jabref.logic.TypedBibEntry;
@@ -917,7 +918,8 @@ public class EntryEditor extends JPanel implements EntryContainer {
         private AutoLinkAction() {
             putValue(Action.SMALL_ICON, IconTheme.JabRefIcon.AUTO_FILE_LINK.getIcon());
             putValue(Action.SHORT_DESCRIPTION,
-                    Localization.lang("Automatically set file links for this entry") + " (Alt-F)");
+                    Localization.lang("Automatically set file links for this entry") +
+                            " (" + KeyStrokeToString.keyStrokeToString(Globals.getKeyPrefs().getKey(KeyBinding.AUTOMATICALLY_LINK_FILES)) + ")");
         }
 
         @Override
