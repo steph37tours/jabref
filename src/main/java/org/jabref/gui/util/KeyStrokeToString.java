@@ -11,46 +11,46 @@ import javax.swing.KeyStroke;
  */
 public class KeyStrokeToString {
 
-    public static String keyStrokeToString(KeyStroke key) {
-        StringJoiner sj = new StringJoiner(" ");
-        int m = key.getModifiers();
+    public static String keyStrokeToString(KeyStroke keyStroke) {
+        StringJoiner keyStrokeAsText = new StringJoiner(" ");
+        int modifiers = keyStroke.getModifiers();
 
-        if ((m & (InputEvent.SHIFT_DOWN_MASK | InputEvent.SHIFT_MASK)) != 0) {
-            sj.add("shift");
+        if ((modifiers & (InputEvent.SHIFT_DOWN_MASK | InputEvent.SHIFT_MASK)) != 0) {
+            keyStrokeAsText.add("shift");
         }
-        if ((m & (InputEvent.CTRL_DOWN_MASK | InputEvent.CTRL_MASK)) != 0) {
-            sj.add("ctrl");
+        if ((modifiers & (InputEvent.CTRL_DOWN_MASK | InputEvent.CTRL_MASK)) != 0) {
+            keyStrokeAsText.add("ctrl");
         }
-        if ((m & (InputEvent.META_DOWN_MASK | InputEvent.META_MASK)) != 0) {
-            sj.add("meta");
+        if ((modifiers & (InputEvent.META_DOWN_MASK | InputEvent.META_MASK)) != 0) {
+            keyStrokeAsText.add("meta");
         }
-        if ((m & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK)) != 0) {
-            sj.add("alt");
+        if ((modifiers & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK)) != 0) {
+            keyStrokeAsText.add("alt");
         }
-        if ((m & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON1_MASK)) != 0) {
-            sj.add("button1");
+        if ((modifiers & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON1_MASK)) != 0) {
+            keyStrokeAsText.add("button1");
         }
-        if ((m & (InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON2_MASK)) != 0) {
-            sj.add("button2");
+        if ((modifiers & (InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON2_MASK)) != 0) {
+            keyStrokeAsText.add("button2");
         }
-        if ((m & (InputEvent.BUTTON3_DOWN_MASK | InputEvent.BUTTON3_MASK)) != 0) {
-            sj.add("button3");
+        if ((modifiers & (InputEvent.BUTTON3_DOWN_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+            keyStrokeAsText.add("button3");
         }
-        switch (key.getKeyEventType()) {
+        switch (keyStroke.getKeyEventType()) {
             case KeyEvent.KEY_TYPED:
-                sj.add(Character.toString(key.getKeyChar()));
+                keyStrokeAsText.add(Character.toString(keyStroke.getKeyChar()));
                 break;
             case KeyEvent.KEY_PRESSED:
-                sj.add(getKeyText(key.getKeyCode()));
+                keyStrokeAsText.add(getKeyText(keyStroke.getKeyCode()));
                 break;
             case KeyEvent.KEY_RELEASED:
-                sj.add(getKeyText(key.getKeyCode()));
+                keyStrokeAsText.add(getKeyText(keyStroke.getKeyCode()));
                 break;
             default:
-                sj.add("unknown-event-type");
+                keyStrokeAsText.add("unknown-event-type");
                 break;
         }
-        return sj.toString();
+        return keyStrokeAsText.toString();
     }
 
     private static String getKeyText(int keyCode) {
@@ -58,6 +58,12 @@ public class KeyStrokeToString {
                 && keyCode <= KeyEvent.VK_Z) {
             return String.valueOf((char) keyCode);
         }
+
+        if (keyCode >= KeyEvent.VK_NUMPAD0 && keyCode <= KeyEvent.VK_NUMPAD9) {
+            char character = (char) (keyCode - KeyEvent.VK_NUMPAD0 + '0');
+            return "NUMPAD" + character;
+        }
+
         switch (keyCode) {
             case KeyEvent.VK_COMMA:
                 return "COMMA";
@@ -337,14 +343,9 @@ public class KeyStrokeToString {
                 return "COMPOSE";
             case KeyEvent.VK_ALT_GRAPH:
                 return "ALT_GRAPH";
-        }
 
-        if (keyCode >= KeyEvent.VK_NUMPAD0 && keyCode <= KeyEvent.VK_NUMPAD9) {
-            char c = (char) (keyCode - KeyEvent.VK_NUMPAD0 + '0');
-            return "NUMPAD" + c;
+            default:
+                return "unknown(0x" + Integer.toString(keyCode, 16) + ")";
         }
-
-        return "unknown(0x" + Integer.toString(keyCode, 16) + ")";
     }
-
 }
